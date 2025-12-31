@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Product Development Roadmap</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+/* ===== YOUR FINAL POLISHED STYLES (UNCHANGED) ===== */
+:root{--bg:#f4f6f8;--card:#fff;--success:#16a34a}
+body{margin:0;font-family:Inter,system-ui;background:var(--bg);color:#0f172a}
+header{background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;padding:18px 24px}
+header h1{margin:0;font-size:20px}
+.container{padding:20px}
+.card{background:var(--card);border-radius:14px;box-shadow:0 10px 28px rgba(0,0,0,.08);overflow:hidden}
+.grid{display:grid;grid-template-columns:300px repeat(8,90px)}
+.cell{padding:8px;border-right:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb;text-align:center;font-size:12px}
+.feature{text-align:left;font-weight:600;background:#f9fafb}
+.v1{background:#2563eb;color:white}
+.v2{background:#4f46e5;color:white}
+.v3{background:#7c3aed;color:white}
+.v4{background:#9333ea;color:white}
+.v5{background:#f59e0b;color:#1f2937}
+.v6{background:#f97316;color:white}
+.v7{background:#10b981;color:white}
+.v8{background:#14b8a6;color:white}
+.date-row{background:#eef2ff;font-weight:700}
+.date-row input{width:100%;padding:4px;font-size:11px;border-radius:6px;border:1px solid #94a3b8}
+.date-label{margin-top:3px;font-size:11px;font-weight:700;color:#1e3a8a;white-space:nowrap}
+.dot{font-size:18px;cursor:pointer;color:transparent}
+.dot.on{color:var(--success)}
+.section{background:linear-gradient(90deg,#fde68a,#fef3c7);font-weight:800;display:flex;justify-content:space-between;align-items:center}
+.add{background:#2563eb;color:white;border:none;border-radius:999px;padding:4px 10px;font-size:11px;cursor:pointer}
+.status{position:fixed;bottom:14px;right:14px;background:#dcfce7;color:#166534;padding:6px 12px;border-radius:999px;font-size:11px}
+</style>
+</head>
+<body>
+
+<header><h1>Product Development Roadmap</h1></header>
+<div class="container"><div class="card" id="table"></div></div>
+<div class="status" id="status">Saved</div>
+
+<script>
+const versions=[
+  {l:"1.38",c:"v1"},{l:"1.39",c:"v2"},{l:"1.40",c:"v3"},{l:"1.41",c:"v4"},
+  {l:"1.42",c:"v5"},{l:"1.43",c:"v6"},{l:"2",c:"v7"},{l:"2.1",c:"v8"}
+];
+
+let model=null;
+const table=document.getElementById("table");
+
+async function loadData(){
+  const res=await fetch("/api/load");
+  model=await res.json();
+  if(!model) initDefault();
+  render();
+}
+
+async function save(){
+  await fetch("/api/save",{method:"POST",headers:{'Content-Type':'application/json'},body:JSON.stringify(model)});
+  document.getElementById("status").innerText="Saved";
+}
+
+function initDefault(){
+  model={
+    dates:Object.fromEntries(versions.map(v=>[v.l,""])),
+    sections:{
+      v1:{title:"V1 Development",rows:[
+        "New Game: Dominos","New Game: Sudoku","Ms. Bling Update",
+        "Influencer Codes","Event: Level-Play each game",
+        "Mahjong Tournaments (fix)","Payout Adjustments Per OS and Geo",
+        "Global Leaderboard - Daily & Monthly",
+        "Automatic Payments (PayPal & Venmo)",
+        "Submit Android to Play Store",
+        "New Ticker Design Feature","Live User Count on Arcade",
+        "New Game: Gin Rummy","New Game: Golf"
+      ].map(n=>({name:n,v:Array(8).fill(0)}))},
+      v2:{title:"V2 Development",rows:[
+        "NEW: User Onboarding Flow","NEW: XP Reward Track",
+        "NEW: Account Level (via XP)","NEW: Remove Stars",
+        "NEW: App UI","NEW: Friends list + Challenge",
+        "NEW: View Profiles","NEW: What's New Section",
+        "NEW: Follow Us prompts","NEW: Brackets (H2H/Tournaments)",
+        "NEW: Cosmetic Shop","NEW: Currency - Coins",
+        "NEW: Guided Onboarding","NEW: Play for Charity",
+        "Remove Practice Mode","Remove Stars",
+        "Matchmaking System (MRR) H2H"
+      ].map(n=>({name:n,v:Array(8).fill(0)}))},
+      cms:{title:"CMS Updates",rows:[]}
+    }
+  };
+}
+
+function row(html){const r=document.createElement("div");r.className="grid";r.innerHTML=html;return r;}
+function formatDate(v){return v?new Date(v).toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"}):"";}
+
+function render(){
+  table.innerHTML="";
+  table.appendChild(row(`<div class="cell feature">Feature</div>`+versions.map(v=>`<div class="cell ${v.c}">${v.l}</div>`).join("")));
+  const d=row(`<div class="cell date-row">Release Date</div>`);
+  versions.forEach(v=>{
+    const c=document.createElement("div");
+    c.className="cell date-row";
+    c.innerHTML=`<input type="date" value="${model.dates[v.l]||""}"><div class="date-label">${formatDate(model.dates[v.l])}</div>`;
+    c.querySelector("input").onchange=e=>{model.dates[v.l]=e.target.value;save();render()};
+    d.appendChild(c);
+  });
+  table.appendChild(d);
+
+  Object.entries(model.sections).forEach(([k,s])=>{
+    table.appendChild(row(`<div class="cell section" style="grid-column:1/span 9">${s.title}<button class="add" onclick="addItem('${k}')">+ Add Item</button></div>`));
+    s.rows.forEach(r=>{
+      const g=document.createElement("div");g.className="grid";
+      g.innerHTML=`<div class="cell feature" contenteditable>${r.name}</div>`;
+      r.v.forEach((v,i)=>{const c=document.createElement("div");c.className="cell dot "+(v?"on":"");c.textContent="●";c.onclick=()=>{r.v[i]=r.v[i]?0:1;save();render()};g.appendChild(c)});
+      g.querySelector(".feature").oninput=e=>{r.name=e.target.innerText;save()};
+      table.appendChild(g);
+    });
+  });
+}
+
+function addItem(k){model.sections[k].rows.push({name:"New Item",v:Array(8).fill(0)});save();render()}
+loadData();
+</script>
+</body>
+</html>
