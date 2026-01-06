@@ -1,6 +1,8 @@
 {
-  "name": "roadmap",
-  "type": "module",
+  "name": "cosmetic-roadmap",
+  "version": "1.0.0",
+  "description": "Cosmetic Roadmap Planning Tool",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
