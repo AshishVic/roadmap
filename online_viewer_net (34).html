@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cosmetic Roadmap</title>
+
+<style>
+:root{
+  --bg:#0b0e1a;
+  --panel:#12162a;
+  --panel2:#171c38;
+  --stroke:rgba(255,255,255,.08);
+  --text:#fff;
+  --muted:rgba(255,255,255,.6);
+  --accent:#7c7cff;
+  --radius:12px;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,system-ui;
+  background:var(--bg);
+  color:var(--text);
+}
+
+header{
+  padding:24px;
+  border-bottom:1px solid var(--stroke);
+}
+h1{margin:0;font-size:26px}
+.sub{color:var(--muted)}
+
+.container{
+  max-width:1400px;
+  margin:auto;
+  padding:20px;
+}
+
+button{
+  background:linear-gradient(135deg,#7c7cff,#5b5bff);
+  border:none;
+  color:white;
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:800;
+  cursor:pointer;
+}
+button:hover{opacity:.9}
+
+.table{
+  overflow-x:auto;
+  border:1px solid var(--stroke);
+  border-radius:var(--radius);
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:1200px;
+}
+
+thead{
+  background:var(--panel2);
+}
+th{
+  text-align:left;
+  padding:14px;
+  font-size:13px;
+  color:#c7c7ff;
+  border-bottom:1px solid var(--stroke);
+  white-space:nowrap;
+}
+
+tbody tr{
+  background:var(--panel);
+}
+tbody tr:not(:last-child){
+  border-bottom:1px solid var(--stroke);
+}
+
+td{
+  padding:10px;
+}
+
+input, select{
+  width:100%;
+  background:rgba(255,255,255,.05);
+  border:1px solid var(--stroke);
+  border-radius:8px;
+  padding:8px 10px;
+  color:white;
+  font-size:13px;
+}
+
+input[type="date"]{
+  color-scheme:dark;
+}
+
+.actions{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:14px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🎮 Cosmetic Roadmap</h1>
+  <p class="sub">Task & Cosmetic Planning Dashboard</p>
+</header>
+
+<div class="container">
+
+  <div class="actions">
+    <div class="sub">Add, edit, and plan cosmetic tasks</div>
+    <button onclick="addRow()">➕ Add Task</button>
+  </div>
+
+  <div class="table">
+    <table>
+      <thead>
+        <tr>
+          <th>Designer</th>
+          <th>Game</th>
+          <th>Design Element</th>
+          <th>Description</th>
+          <th>Date Needed</th>
+          <th>Date Launch</th>
+          <th>Cost (Coins)</th>
+          <th>Design Inspiration / Asset Link</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr>
+          <td>
+            <select>
+              <option value="">Select</option>
+              <option>Evermore</option>
+              <option>Hashbyte</option>
+            </select>
+          </td>
+          <td><input placeholder="Solitaire" /></td>
+          <td><input placeholder="Card Back" /></td>
+          <td><input placeholder="Lion Sigil" /></td>
+          <td><input type="date" /></td>
+          <td><input type="date" /></td>
+          <td><input placeholder="250" /></td>
+          <td><input placeholder="https://drive.google.com/..." /></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+function addRow(){
+  const row = document.createElement('tr');
+  row.innerHTML = `
+    <td>
+      <select>
+        <option value="">Select</option>
+        <option>Evermore</option>
+        <option>Hashbyte</option>
+      </select>
+    </td>
+    <td><input placeholder="Game" /></td>
+    <td><input placeholder="Design Element" /></td>
+    <td><input placeholder="Description" /></td>
+    <td><input type="date" /></td>
+    <td><input type="date" /></td>
+    <td><input placeholder="Coins" /></td>
+    <td><input placeholder="Asset Link" /></td>
+  `;
+  document.getElementById('tableBody').appendChild(row);
+}
+</script>
+
+</body>
+</html>
