@@ -1,24 +1,18 @@
-import express from "express";
-import fs from "fs";
-import path from "path";
+const express = require("express");
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const DATA_FILE = path.join(process.cwd(), "data.json");
 
-app.use(express.json());
-app.use(express.static("."));
+// Serve static files
+app.use(express.static(__dirname));
 
-app.get("/api/load", (_req, res) => {
-  if (!fs.existsSync(DATA_FILE)) return res.json(null);
-  res.json(JSON.parse(fs.readFileSync(DATA_FILE)));
+// Root route
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
-app.post("/api/save", (req, res) => {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(req.body, null, 2));
-  res.json({ ok: true });
-});
-
+// Start server
 app.listen(PORT, () => {
-  console.log(`Roadmap running on http://localhost:${PORT}`);
+  console.log(`🚀 Cosmetic Roadmap running at http://localhost:${PORT}`);
 });
